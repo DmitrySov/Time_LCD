@@ -25,7 +25,6 @@
 #include "stdio.h"
 #include "string.h"
 #include "stdbool.h"
-#include "MY_LIS3DSH.h"
 #include "lcd1602_i2c_lib.h"
 /* USER CODE END Includes */
 
@@ -103,7 +102,7 @@ void get_time (void)
 
 void time_set ()
 {
-	if (HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_11) == GPIO_PIN_SET) // hours setting button
+	if (HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_11) == GPIO_PIN_RESET) // hours setting button
 			{
 		      if(sTime.Hours <= 23)
 		      {
@@ -116,7 +115,7 @@ void time_set ()
 		      flag = 1;
 			}
 
-	if (HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_12) == GPIO_PIN_SET) // minutes setting button
+	if (HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_12) == GPIO_PIN_RESET) // minutes setting button
 
 		{
 		  if(sTime.Minutes <= 59)
@@ -131,7 +130,7 @@ void time_set ()
 	     }
 
 
-	if (HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_13) == GPIO_PIN_SET) // seconds setting button
+	if (HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_13) == GPIO_PIN_RESET) // seconds setting button
 
 			{
 			  if(sTime.Seconds <= 59)
@@ -148,7 +147,9 @@ void time_set ()
 	if(flag == 1)
 		{
 		RTC_set(sTime.Hours, sTime.Minutes, sTime.Seconds);
+		flag = 0;
 		}
+
 }
 
 /* USER CODE END 0 */
@@ -190,15 +191,7 @@ int main(void)
    HAL_Delay(100);
    lcd1602_Init();
 
-/*accelConfig.dataRate = LIS3DSH_DATARATE_25;
-accelConfig.fullScale = LIS3DSH_FULLSCALE_4;
-accelConfig.antiAliasingBW = LIS3DSH_FILTER_BW_50;
-accelConfig.enableAxes = LIS3DSH_XYZ_ENABLE;
-accelConfig.interruptEnable = false;
 
- LIS3DSH_X_calibrate(-1000.0, 980.0);
- LIS3DSH_Y_calibrate(-1020.0, 1040.0);
- LIS3DSH_Z_calibrate(-920.0, 1040.0);*/
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -485,7 +478,7 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pins : PE11 PE12 PE13 */
   GPIO_InitStruct.Pin = GPIO_PIN_11|GPIO_PIN_12|GPIO_PIN_13;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
   /*Configure GPIO pin : PD13 */
